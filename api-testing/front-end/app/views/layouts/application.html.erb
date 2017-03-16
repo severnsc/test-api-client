@@ -9,9 +9,12 @@
   </head>
 
   <body>
-    <% if session[:user_id] %>
-      <%= link_to "Logout", logout_path, method: :delete %>
+    <%= render 'layouts/header' %>
+    <div class="container">
+      <% flash.each do |message_type, message| %>
+        <%= content_tag(:div, message, class: "alert alert-#{message_type}")%>
     <% end %>
     <%= yield %>
+    <%= render 'layouts/footer' %>
   </body>
 </html>
