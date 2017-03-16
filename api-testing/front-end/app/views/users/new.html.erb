@@ -1,0 +1,5 @@
+<%= form_tag('http://localhost:3001/api/v1/users', method: :post) %>
+<%= email_field_tag '[user]email' %>
+<%= password_field_tag '[user]password' %>
+<%= password_field_tag '[user]password_confirmation' %>
+<%= submit_tag 'Create account' %>
