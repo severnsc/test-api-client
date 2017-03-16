@@ -14,8 +14,11 @@
   end
 
   def destroy
-    uri = URI("http://localhost:3001/api/v1/sessions?id=#{session[:user_auth_token]}")
-    response = Net::HTTP.delete(uri)
+    host = 'localhost'
+    port = '3001'
+    path = "/api/v1/sessions/#{session[:user_auth_token]}"
+    req = Net::HTTP::Delete.new(path)
+    response = Net::HTTP.new(host, port).start {|http| http.request(req)}
     session.delete(:user_id)
     session.delete(:user_auth_token)
     redirect_to login_path

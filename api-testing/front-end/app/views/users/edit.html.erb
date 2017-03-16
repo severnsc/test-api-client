@@ -1,5 +1,6 @@
-<%= form_tag(users_path, method: :post) %>
+<%= form_tag("http://localhost:3001/api/v1/users/#{session[:user_id]}", method: :post) %>
 <%= email_field_tag '[user]email' %>
 <%= password_field_tag '[user]password' %>
 <%= password_field_tag '[user]password_confirmation' %>
+<%= hidden_field_tag 'url', login_url %>
 <%= submit_tag 'Create account' %>

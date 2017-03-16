@@ -1,0 +1,5 @@
+Activate your account
+
+To activate your account for API test app, click the link below:
+
+<%= link_to "Activate your account", edit_account_activation_url(@user['user']['auth_token'], activation_token: @user['activation_token'] ) %>
