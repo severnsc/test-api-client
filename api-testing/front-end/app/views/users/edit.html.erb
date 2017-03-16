@@ -4,3 +4,4 @@
 <%= password_field_tag '[user]password_confirmation' %>
 <%= hidden_field_tag 'url', login_url %>
 <%= submit_tag 'Create account' %>
+<%= link_to "Delete Your Account", user_path(params[:id]), method: :delete, data: {confirm: "Are you sure you want to delete your account?"} %>

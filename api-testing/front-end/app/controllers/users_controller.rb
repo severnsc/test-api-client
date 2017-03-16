@@ -58,6 +58,18 @@ class UsersController < ApplicationController
     redirect_to user_path(user['id'])
   end
 
+  def destroy
+    host = 'localhost'
+    port = '3001'
+    path = "/api/v1/users/#{params[:id]}"
+    request = Net::HTTP::Delete.new(path)
+    request['Authorize'] = session[:user_auth_token]
+    response = Net::HTTP.new(host, port).start {|http| http.request(request)}
+    session.delete(:user_id)
+    session.delete(:user_auth_token)
+    redirect_to root_path
+  end
+
   private
 
   def logged_in?
