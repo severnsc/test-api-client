@@ -1,6 +1,5 @@
 <h1>Login</h1>
-<%= form_tag('http://localhost:30001/api/v1/sessions', method: :post) %>
-<%= hidden_field_tag, user_path(User.first.email) %>
+<%= form_tag(login_path, method: :post) %>
 <%= email_field_tag '[user]email' %>
 <%= password_field_tag '[user]password' %>
 <%= submit_tag "Login" %>
