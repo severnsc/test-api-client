@@ -7,10 +7,15 @@
   def create
     uri = URI('http://localhost:3001/api/v1/sessions')
     response = Net::HTTP.post_form(uri, { 'email' => params[:user][:email], 'password' => params[:user][:password]})
-    user = JSON.parse(response.body)
-    session[:user_id] = user['id']
-    session[:user_auth_token] = user['auth_token']
-    redirect_to user_path(user['id'])
+    if response.code == '201'
+      user = JSON.parse(response.body)
+      session[:user_id] = user['id']
+      session[:user_auth_token] = user['auth_token']
+      redirect_to user_path(user['id'])
+    else
+      flash.now[:danger] = "Invalid email/password combination"
+      render 'new'
+    end
   end
 
   def destroy

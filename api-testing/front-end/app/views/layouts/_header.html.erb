@@ -18,9 +18,9 @@
               </a>
                 <ul class="dropdown-menu">
                   <li><%= link_to "Profile", user_path(session[:user_id]) %></li>
-                  <li><%= link_to "Settings", edit_user_path(current_user) %></li>
-                  <% if current_user.admin? %>
-                    <li><%= link_to "Admin Console", admin_path(current_user) %></li>
+                  <li><%= link_to "Settings", edit_user_path(session[:user_id]) %></li>
+                  <% if current_user['admin'] %>
+                    <li><%= link_to "Admin Console", admin_path(session[:user_id]) %></li>
                   <% end %>
                   <li class="divider"></li>
                   <li>

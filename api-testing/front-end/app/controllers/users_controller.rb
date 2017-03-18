@@ -11,12 +11,19 @@ class UsersController < ApplicationController
     path = "/api/v1/users"
     request = Net::HTTP::Post.new(path)
     request.set_form_data({"user[email]" => params[:user][:email], "user[password]" => params[:user][:password], "user[password_confirmation]" => params[:user][:password_confirmation]})
-    user = Net::HTTP.new(host, port).start {|http| http.request(request)}
-    @user = JSON.parse(user.body)
-    byebug
-    UserMailer.account_activation(@user).deliver_now
-    flash[:notice] = "Check your email for account activation link"
-    redirect_to root_path
+    response = Net::HTTP.new(host, port).start {|http| http.request(request)}
+    if response.code == '201'
+      @user = JSON.parse(response.body)
+      UserMailer.account_activation(@user).deliver_now
+      flash[:notice] = "Check your email for account activation link"
+      redirect_to root_path
+    else
+      message = "Invalid information"
+      errors = JSON.parse(response.body)
+      errors["errors"].each {|error| message += " | #{error}"}
+      flash.now[:danger] = message
+      render 'new'
+    end
   end
 
   def show
@@ -24,8 +31,12 @@ class UsersController < ApplicationController
     port = '3001'
     path = "/api/v1/users/#{params[:id]}"
     request = Net::HTTP::Get.new(path, initheader = {'Authorize' => "#{session[:user_auth_token]}"})
-    user = Net::HTTP.new(host, port).start {|http| http.request(request)}
-    @user = JSON.parse(user.body)
+    response = Net::HTTP.new(host, port).start {|http| http.request(request)}
+    if response.code == '200'
+      @user = JSON.parse(response.body)
+    else
+      not_found
+    end
   end
 
   def index
@@ -42,8 +53,12 @@ class UsersController < ApplicationController
     port = '3001'
     path = "/api/v1/users/#{params[:id]}"
     request = Net::HTTP::Get.new(path, initheader = {'Authorize' => "#{session[:user_auth_token]}"})
-    user = Net::HTTP.new(host, port).start {|http| http.request(request)}
-    @user = JSON.parse(user.body)
+    response = Net::HTTP.new(host, port).start {|http| http.request(request)}
+    if response.code == '200'
+      @user = JSON.parse(response.body)
+    else
+      not_found
+    end
   end
 
   def update
@@ -54,8 +69,17 @@ class UsersController < ApplicationController
     request.set_form_data({"user[email]" => params[:user][:email], "user[password]" => params[:user][:password], "user[password_confirmation]" => params[:user][:password_confirmation]})
     request['Authorize'] = session[:user_auth_token]
     response = Net::HTTP.new(host, port).start {|http| http.request(request)}
-    user = JSON.parse(response.body)
-    redirect_to user_path(user['id'])
+    if response.code == '200'
+      user = JSON.parse(response.body)
+      flash[:success] = "Profile updated!"
+      redirect_to user_path(user['id'])
+    else
+      message = "Invalid information"
+      errors = JSON.parse(response.body)
+      errors.each {|error| message += " | #{error}"}
+      flash[:danger] = message
+      redirect_to edit_user_path(params[:id])
+    end
   end
 
   def destroy

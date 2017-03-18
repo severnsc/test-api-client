@@ -1,7 +1,12 @@
-<%= form_tag(user_path(params[:id]), method: :patch) %>
-<%= email_field_tag '[user]email', @user['email'] %>
-<%= password_field_tag '[user]password' %>
-<%= password_field_tag '[user]password_confirmation' %>
-<%= hidden_field_tag 'url', login_url %>
-<%= submit_tag 'Create account' %>
-<%= link_to "Delete Your Account", user_path(params[:id]), method: :delete, data: {confirm: "Are you sure you want to delete your account?"} %>
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+    <h1>Edit Profile</h1>
+    <%= form_tag(user_path(params[:id]), method: :patch) %>
+    <%= email_field_tag '[user]email', @user['email'], {class: 'form-control'} %>
+    <%= password_field_tag '[user]password', '',{class: 'form-control'} %>
+    <%= password_field_tag '[user]password_confirmation', '',{class: 'form-control'} %>
+    <%= hidden_field_tag 'url', login_url %>
+    <%= submit_tag 'Create account', class: 'btn btn-primary' %>
+    <%= link_to "Delete Your Account", user_path(params[:id]), method: :delete, data: {confirm: "Are you sure you want to delete your account?"} %>
+  </div>
+</div>
